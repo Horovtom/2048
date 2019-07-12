@@ -1,3 +1,7 @@
+//
+// Created by lactosis on 12.7.19.
+//
+
 #include "Game.h"
 #include <iostream>
 #include "Direction.h"

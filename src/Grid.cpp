@@ -1,3 +1,7 @@
+//
+// Created by lactosis on 12.7.19.
+//
+
 #include "Grid.h"
 #include <iostream>
 #include <random>
@@ -7,12 +11,10 @@ Grid::Grid(int width, int height): w(width), h(height) {
     grid.reserve(w * h);
     for (int i = 0; i < w * h; ++i) {
         grid.push_back(EMPTY);
-    } 
-    
-    //addRandomTile();
-    //addRandomTile();
+    }
 
-
+    addRandomTile();
+    addRandomTile();
 }
 
 Grid::Grid(std::vector<int> grid, int width, int height): w(width), h(height) {
@@ -23,8 +25,6 @@ Grid::Grid(std::vector<int> grid, int width, int height): w(width), h(height) {
     }
 }
 
-
-
 std::vector<int> Grid::getGrid() {
     std::cout << "Getting grid!" << std::endl;
     return std::vector<int>(grid);
@@ -34,7 +34,7 @@ bool Grid::makeTurn(Direction direction) {
     std::cout << "Making turn to " << direction << std::endl;
 
     int currentIndex, increment, nextLine, stop, stop2;
-    
+
     switch(direction) {
         case RIGHT:
             currentIndex = 15;
@@ -61,16 +61,20 @@ bool Grid::makeTurn(Direction direction) {
             nextLine = - (w * (h - 1)) + 1;
             stop = h; stop2 = w;
             break;
+
+        default:
+            std::cerr<< "Error! Invalid direction!" << std::endl;
+            exit(-1);
     }
 
     for (int r = 0; r < stop2; ++r) {
         int lastIndex = currentIndex;
         int lastValue = grid.at(lastIndex);
-        
+
         for (int i = stop - 2; i >= 0; --i) {
             currentIndex += increment;
             int currentValue = grid.at(currentIndex);
-            
+
             if (currentValue == EMPTY)
                 continue;
 

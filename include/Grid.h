@@ -1,3 +1,7 @@
+//
+// Created by lactosis on 12.7.19.
+//
+
 #ifndef __GRID_H
 #define __GRID_H
 #include <vector>
@@ -5,7 +9,7 @@
 
 class Grid {
 public:
-    static const int EMPTY = 0;
+    const int EMPTY = 0;
 
     typedef struct Coord {
         int x, y;

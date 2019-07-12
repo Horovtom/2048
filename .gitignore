@@ -12,3 +12,5 @@ _deps
 *.o
 2048
 .vscode
+.idea
+cmake-build-debug

@@ -20,9 +20,13 @@ public:
     std::vector<int> getGrid();
 
     /**
-     * Returns whether the game is over
+     * Makes turn modifying the current grid
+     * @param direction to which we swiped
+     * @return whether the turn was valid
      */
     bool makeTurn(Direction direction);
+
+    void setGrid(std::vector<int> g);
 private:
     std::vector<int> grid;
     int w;

@@ -7,7 +7,6 @@
 #include <random>
 
 Grid::Grid(int width, int height): w(width), h(height) {
-    std::cout << "I am in the constructor of Grid with w: " << w << " h: " << h  << std::endl;
     grid.reserve(w * h);
     for (int i = 0; i < w * h; ++i) {
         grid.push_back(EMPTY);
@@ -18,15 +17,18 @@ Grid::Grid(int width, int height): w(width), h(height) {
 }
 
 Grid::Grid(std::vector<int> grid, int width, int height): w(width), h(height) {
-    std::cout << "I am in the constructor of Grid with w: " << w << " h: " << h << " and the grid is specified!" << std::endl;
-    grid = std::vector<int>(grid);
+    setGrid(std::move(grid));
+}
+
+void Grid::setGrid(std::vector<int> g) {
+    grid = std::move(g);
     if (grid.size() != w * h) {
         std::cerr << "Invalid grid size: " << grid.size() << "! It should be " << w * h << " tiles long!" << std::endl;
+        exit(-1);
     }
 }
 
 std::vector<int> Grid::getGrid() {
-    std::cout << "Getting grid!" << std::endl;
     return std::vector<int>(grid);
 }
 
@@ -67,6 +69,8 @@ bool Grid::makeTurn(Direction direction) {
             exit(-1);
     }
 
+    bool changedSomething = false;
+
     for (int r = 0; r < stop2; ++r) {
         int lastIndex = currentIndex;
         int lastValue = grid.at(lastIndex);
@@ -83,24 +87,31 @@ bool Grid::makeTurn(Direction direction) {
                 // Move
                 grid.at(lastIndex) = currentValue;
                 grid.at(currentIndex) = EMPTY;
+                changedSomething = true;
             } else if (lastValue == currentValue) {
                 // Merge
                 grid.at(lastIndex) = 2*currentValue;
                 grid.at(currentIndex) = EMPTY;
+                changedSomething = true;
             } else {
                 // They are different. Just snap it to next index
                 lastIndex += increment;
                 if (lastIndex != currentIndex) {
                     grid.at(lastIndex) = currentValue;
                     grid.at(currentValue) = EMPTY;
+                    changedSomething = true;
                 }
             }
             lastIndex += increment;
+            lastValue = grid.at(lastIndex);
         }
         currentIndex += nextLine;
     }
 
-    return !canMakeTurn();
+    if (changedSomething)
+        addRandomTile();
+
+    return changedSomething;
 }
 
 bool Grid::canMakeTurn() {

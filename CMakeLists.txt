@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(2048)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCES
         src/Game.cpp
@@ -17,7 +17,11 @@ target_include_directories(2048
         ${PROJECT_SOURCE_DIR}/include
         )
 
-add_executable(test tests/test.cpp ${SOURCES})
+set(TEST_LIB
+        tests/Test.cpp
+        tests/Test.h)
+
+add_executable(test tests/runTests.cpp ${SOURCES} ${TEST_LIB})
 target_include_directories(test
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include)

@@ -5,7 +5,10 @@
 
 class Grid {
 public:
-    Grid();
+    typedef struct Coord {
+        int x, y;
+    } Coord;
+    Grid(int width, int height);
     std::vector<int> getGrid();
 
     /**
@@ -14,7 +17,11 @@ public:
     bool makeTurn(Direction direction);
 private:
     std::vector<int> grid;
+    int w;
+    int h;
     int score = 0;
+    int coordToIndex(Coord coord);
+    Coord indexToCoord(int index);
 };
 
 

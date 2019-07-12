@@ -4,11 +4,13 @@
 
 class Game {
 public:
-    Game();
+    Game(int width = 4, int height = 4);
     void run();
     void init();
 private: 
     Grid grid;
+    int w;
+    int h;
 };
 
 #endif

@@ -2,8 +2,8 @@
 #include <iostream>
 #include "Direction.h"
 
-Game::Game() {
-    std::cout << "I am in the constructor of Game" << std::endl;
+Game::Game(int width, int height) : w(width), h(height), grid(width, height) {
+    std::cout << "I am in the constructor of Game with w: " << w << ", h: " << h << std::endl;
 }
 
 void Game::init() {

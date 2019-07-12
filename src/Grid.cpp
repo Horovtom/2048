@@ -1,9 +1,13 @@
 #include "Grid.h"
 #include <iostream>
 
-Grid::Grid() {
-    std::cout << "I am in the constructor of Grid" << std::endl;
+Grid::Grid(int width, int height): w(width), h(height) {
+    std::cout << "I am in the constructor of Grid with w: " << w << " h: " << h  << std::endl;
+    grid.reserve(w * h);
+    
 }
+
+
 
 std::vector<int> Grid::getGrid() {
     std::cout << "Getting grid!" << std::endl;
@@ -12,5 +16,14 @@ std::vector<int> Grid::getGrid() {
 
 bool Grid::makeTurn(Direction direction) {
     std::cout << "Making turn to " << direction << std::endl;
+    
     return false;
+}
+
+int Grid::coordToIndex(Grid::Coord coord) {
+    return coord.x + coord.y * w;
+}
+
+Grid::Coord Grid::indexToCoord(int index) {
+    return {index % w, index / w};
 }

@@ -1,10 +1,26 @@
 #include "Grid.h"
 #include <iostream>
+#include <random>
 
 Grid::Grid(int width, int height): w(width), h(height) {
     std::cout << "I am in the constructor of Grid with w: " << w << " h: " << h  << std::endl;
     grid.reserve(w * h);
+    for (int i = 0; i < w * h; ++i) {
+        grid.push_back(EMPTY);
+    } 
     
+    //addRandomTile();
+    //addRandomTile();
+
+
+}
+
+Grid::Grid(std::vector<int> grid, int width, int height): w(width), h(height) {
+    std::cout << "I am in the constructor of Grid with w: " << w << " h: " << h << " and the grid is specified!" << std::endl;
+    grid = std::vector<int>(grid);
+    if (grid.size() != w * h) {
+        std::cerr << "Invalid grid size: " << grid.size() << "! It should be " << w * h << " tiles long!" << std::endl;
+    }
 }
 
 
@@ -16,8 +32,119 @@ std::vector<int> Grid::getGrid() {
 
 bool Grid::makeTurn(Direction direction) {
     std::cout << "Making turn to " << direction << std::endl;
+
+    int currentIndex, increment, nextLine, stop, stop2;
     
+    switch(direction) {
+        case RIGHT:
+            currentIndex = 15;
+            increment = nextLine = -1;
+            stop = w; stop2 = h;
+            break;
+
+        case LEFT:
+            currentIndex = 0;
+            increment = nextLine = 1;
+            stop = w; stop2 = h;
+            break;
+
+        case DOWN:
+            currentIndex = 15;
+            increment = -w;
+            nextLine = (w * (h - 1)) - 1;
+            stop = h; stop2= w;
+            break;
+
+        case UP:
+            currentIndex = 0;
+            increment = w;
+            nextLine = - (w * (h - 1)) + 1;
+            stop = h; stop2 = w;
+            break;
+    }
+
+    for (int r = 0; r < stop2; ++r) {
+        int lastIndex = currentIndex;
+        int lastValue = grid.at(lastIndex);
+        
+        for (int i = stop - 2; i >= 0; --i) {
+            currentIndex += increment;
+            int currentValue = grid.at(currentIndex);
+            
+            if (currentValue == EMPTY)
+                continue;
+
+            // CurrentValue is not empty by now
+            if (lastValue == EMPTY) {
+                // Move
+                grid.at(lastIndex) = currentValue;
+                grid.at(currentIndex) = EMPTY;
+            } else if (lastValue == currentValue) {
+                // Merge
+                grid.at(lastIndex) = 2*currentValue;
+                grid.at(currentIndex) = EMPTY;
+            } else {
+                // They are different. Just snap it to next index
+                lastIndex += increment;
+                if (lastIndex != currentIndex) {
+                    grid.at(lastIndex) = currentValue;
+                    grid.at(currentValue) = EMPTY;
+                }
+            }
+            lastIndex += increment;
+        }
+        currentIndex += nextLine;
+    }
+
+    return !canMakeTurn();
+}
+
+bool Grid::canMakeTurn() {
+    for (int i = 0; i < h - 1; i++) {
+        for (int j = 0; j < w - 1 ; j++) {
+            int index = grid.at(coordToIndex({i, j}));
+            int ahead = grid.at(coordToIndex({i+1, j}));
+            int below = grid.at(coordToIndex({i, j+1}));
+            if (index == 0 || ahead == 0 || below == 0) return true;
+            if (index == ahead || index == below) return true;
+        }
+    }
     return false;
+}
+
+void Grid::addRandomTile() {
+    std::vector<int> freePlaces = getFreePlaces();
+    if (freePlaces.size() == 0) {
+        std::cerr<< "There was no free place to put the tile to!" << std::endl;
+        return;
+    }
+
+    std::random_device rd;     // only used once to initialise (seed) engine
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> uni(0,freePlaces.size() -1);
+
+    int tile = freePlaces.at(uni(rng));
+    std::uniform_int_distribution<int> uni2(1, 4);
+    int which = (uni2(rng) / 4 + 1) * 2;
+    grid.at(tile) = which;
+    std::cout << "Added number: " <<which << " to place: " << tile << std::endl;
+}
+
+int Grid::occupiedTiles() {
+    int curr = 0;
+    for (int i = 0; i < w * h; ++i) {
+        if (grid.at(i) != 0) curr++;
+    }
+    return curr;
+}
+
+std::vector<int> Grid::getFreePlaces() {
+    std::vector<int> ret;
+    for (int i = 0; i < w * h; ++i) {
+        if (grid.at(i) == 0) ret.push_back(i);
+    }
+
+    return ret;
 }
 
 int Grid::coordToIndex(Grid::Coord coord) {

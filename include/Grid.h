@@ -5,9 +5,13 @@
 
 class Grid {
 public:
+    static const int EMPTY = 0;
+
     typedef struct Coord {
         int x, y;
     } Coord;
+
+    Grid(std::vector<int> grid, int width, int height);
     Grid(int width, int height);
     std::vector<int> getGrid();
 
@@ -22,6 +26,10 @@ private:
     int score = 0;
     int coordToIndex(Coord coord);
     Coord indexToCoord(int index);
+    void addRandomTile();
+    int occupiedTiles();
+    std::vector<int> getFreePlaces();
+    bool canMakeTurn();
 };
 
 

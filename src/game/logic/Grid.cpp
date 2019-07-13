@@ -9,7 +9,7 @@
 #include <cmath>
 #include "game/logic/Grid.h"
 
-Grid::Grid(int width, int height): w(width), h(height) {
+Grid::Grid(int width, int height) : w(width), h(height) {
     grid.reserve(w * h);
     for (int i = 0; i < w * h; ++i) {
         grid.push_back(EMPTY);
@@ -19,7 +19,7 @@ Grid::Grid(int width, int height): w(width), h(height) {
     addRandomTile();
 }
 
-Grid::Grid(std::vector<int> grid, int width, int height): w(width), h(height) {
+Grid::Grid(std::vector<int> grid, int width, int height) : w(width), h(height) {
     setGrid(std::move(grid));
 }
 
@@ -40,35 +40,39 @@ bool Grid::makeTurn(Direction direction) {
 
     int currentIndex, increment, nextLine, stop, stop2;
 
-    switch(direction) {
+    switch (direction) {
         case RIGHT:
             currentIndex = w * h - 1;
             increment = nextLine = -1;
-            stop = w; stop2 = h;
+            stop = w;
+            stop2 = h;
             break;
 
         case LEFT:
             currentIndex = 0;
             increment = nextLine = 1;
-            stop = w; stop2 = h;
+            stop = w;
+            stop2 = h;
             break;
 
         case DOWN:
             currentIndex = w * h - 1;
             increment = -w;
             nextLine = (w * (h - 1)) - 1;
-            stop = h; stop2= w;
+            stop = h;
+            stop2 = w;
             break;
 
         case UP:
             currentIndex = 0;
             increment = w;
-            nextLine = - (w * (h - 1)) + 1;
-            stop = h; stop2 = w;
+            nextLine = -(w * (h - 1)) + 1;
+            stop = h;
+            stop2 = w;
             break;
 
         default:
-            std::cerr<< "Error! Invalid direction!" << std::endl;
+            std::cerr << "Error! Invalid direction!" << std::endl;
             exit(-1);
     }
 
@@ -95,7 +99,7 @@ bool Grid::makeTurn(Direction direction) {
                 continue;
             } else if (lastValue == currentValue) {
                 // Merge
-                grid.at(lastIndex) = 2*currentValue;
+                grid.at(lastIndex) = 2 * currentValue;
                 grid.at(currentIndex) = EMPTY;
                 changedSomething = true;
             } else {
@@ -139,14 +143,20 @@ std::string Grid::toString() {
 }
 
 bool Grid::canMakeTurn() {
+    if (grid.at(grid.size() - 1) == 0) return true;
     for (int i = 0; i < h - 1; i++) {
-        for (int j = 0; j < w - 1 ; j++) {
+        for (int j = 0; j < w - 1; j++) {
             int index = grid.at(coordToIndex({j, i}));
             int ahead = grid.at(coordToIndex({j + 1, i}));
             int below = grid.at(coordToIndex({j, i + 1}));
             if (index == 0 || ahead == 0 || below == 0) return true;
             if (index == ahead || index == below) return true;
         }
+    }
+
+    for (int i = 0; i < w - 1; ++i) {
+        if (grid.at(coordToIndex({i, h - 1}) == grid.at(coordToIndex({i + 1, h - 1}))))
+            return true;
     }
     return false;
 }
@@ -160,13 +170,13 @@ void Grid::addRandomTile() {
 
     std::random_device rd;     // only used once to initialise (seed) engine
     std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> uni(0,freePlaces.size() -1);
+    std::uniform_int_distribution<int> uni(0, freePlaces.size() - 1);
 
     int tile = freePlaces.at(uni(rng));
     std::uniform_int_distribution<int> uni2(1, 4);
     int which = (uni2(rng) / 4 + 1) * 2;
     grid.at(tile) = which;
-    std::cout << "Added number: " <<which << " to place: " << tile << std::endl;
+    std::cout << "Added number: " << which << " to place: " << tile << std::endl;
 }
 
 int Grid::occupiedTilesCount() {
@@ -215,4 +225,12 @@ std::vector<std::vector<int>> Grid::getGrid2D() {
     }
 
     return res;
+}
+
+void Grid::resetGrid() {
+    for (int &i : grid) {
+        i = EMPTY;
+    }
+    addRandomTile();
+    addRandomTile();
 }

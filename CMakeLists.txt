@@ -20,9 +20,10 @@ include_directories(
 set(GAME_SOURCES
         src/game/logic/Game.cpp
         src/game/logic/Grid.cpp
-        src/game/Controller.cpp)
+        )
 
 set(GRAPHICS_SOURCES
+        src/game/Controller.cpp
         src/graphics/GameArea.cpp
         src/graphics/GameWindow.cpp
         )

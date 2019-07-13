@@ -36,6 +36,11 @@ bool GameArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 
     drawGrid(cr, width, height);
 
+    cr->set_source_rgb(COLOR_BLACK);
+    if (!prompt.empty()) {
+        draw_text(cr, width / 4, height / 2, prompt, width / 32);
+    }
+
     return true;
 }
 
@@ -46,11 +51,14 @@ void GameArea::draw_rectangle(const Cairo::RefPtr<Cairo::Context> &cr,
 }
 
 void GameArea::draw_text(const Cairo::RefPtr<Cairo::Context> &cr,
-                         int x, int y, const std::string &t) {
+                         int x, int y, const std::string &t, int fontSize) {
     Pango::FontDescription font;
 
     font.set_family("Monospace");
     font.set_weight(Pango::WEIGHT_BOLD);
+    if (fontSize != 0) {
+        font.set_absolute_size(fontSize * Pango::SCALE);
+    }
 
     auto layout = create_pango_layout(t);
 
@@ -119,7 +127,6 @@ void GameArea::drawNumber(const Cairo::RefPtr<Cairo::Context> &cr, int number, i
     auto layout = create_pango_layout(std::to_string(number));
     layout->set_font_description(font);
 
-
     int textWidth;
     int textHeight;
 
@@ -132,4 +139,12 @@ void GameArea::drawNumber(const Cairo::RefPtr<Cairo::Context> &cr, int number, i
     cr->move_to(x, y);
 
     layout->show_in_cairo_context(cr);
+}
+
+void GameArea::enablePrompt(std::string promptText) {
+    prompt = promptText;
+}
+
+void GameArea::disablePrompt() {
+    prompt = "";
 }

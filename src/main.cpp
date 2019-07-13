@@ -11,7 +11,7 @@
 
 
 int runWithGraphics(int argc, char **argv) {
-    Game game;
+    Game game(4, 4);
 
     auto app = Gtk::Application::create(argc, argv, "com.github.horovtom.bot-2048");
     GameWindow window;

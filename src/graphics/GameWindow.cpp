@@ -23,6 +23,8 @@ bool GameWindow::on_key_press_event(GdkEventKey *key_event) {
     //GDK_KEY_1 -> the '1' key
     //GDK_KEY_2 -> the '2' key
 
+    area.disablePrompt();
+
     //select the first radio button, when we press alt + 1
     if (key_event->keyval == GDK_KEY_Left) {
         controller->onUserAction(LEFT);
@@ -65,5 +67,5 @@ void GameWindow::setData(std::vector<std::vector<int>> d, int width, int height,
 }
 
 void GameWindow::showPrompt(std::string promptText) {
-    // TODO: IMPLEMENT
+    area.enablePrompt(promptText);
 }

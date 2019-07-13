@@ -15,6 +15,10 @@ public:
 
     void setData(std::vector<std::vector<int>> data, int width, int height, int score);
 
+    void enablePrompt(std::string promptText);
+
+    void disablePrompt();
+
 protected:
     //Override default signal handler:
     bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) override;
@@ -22,7 +26,7 @@ protected:
 private:
     void draw_rectangle(const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, int width, int height);
 
-    void draw_text(const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, const std::string &text);
+    void draw_text(const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, const std::string &text, int fontSize = 0);
 
     const int SIDE_OFFSET = 5;
     const int TEXT_HEIGHT = 15;
@@ -56,6 +60,8 @@ private:
     };
 
     void setColorForNumber(const Cairo::RefPtr<Cairo::Context> &cr, int number);
+
+    std::string prompt = "";
 };
 
 #endif //__GAME_AREA_H

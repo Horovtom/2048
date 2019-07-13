@@ -37,6 +37,8 @@ public:
 
     std::vector<std::vector<int>> getGrid2D();
 
+    void resetGrid();
+
 private:
     std::vector<int> grid;
     int w;

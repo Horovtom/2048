@@ -7,7 +7,7 @@
 #include "game/logic/Direction.h"
 
 Game::Game(int width, int height) : w(width), h(height), grid(width, height) {
-    std::cout << "I am in the constructor of Game with w: " << w << ", h: " << h << std::endl;
+
 }
 
 std::vector<std::vector<int>> Game::getState() {
@@ -31,7 +31,7 @@ void Game::makeTurn(Direction direction) {
 }
 
 void Game::resetGame() {
-    // TODO: IMPLEMENT
+    grid.resetGrid();
 }
 
 bool Game::gameOver() {

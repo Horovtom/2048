@@ -25,6 +25,7 @@ public:
 private:
     Game *game;
     GameWindow *window;
+    bool restartPrompt;
 };
 
 

@@ -6,7 +6,7 @@
 #define __GRID_H
 #include <vector>
 #include <string>
-#include "Direction.h"
+#include <game/logic/Direction.h>
 
 class Grid {
 public:
@@ -34,6 +34,9 @@ public:
     std::string toString();
 
     int getScore();
+
+    std::vector<std::vector<int>> getGrid2D();
+
 private:
     std::vector<int> grid;
     int w;

@@ -2,8 +2,8 @@
 // Created by lactosis on 12.7.19.
 //
 
-#include "game/logic/Grid.h"
-#include "Test.h"
+#include <game/logic/Grid.h>
+#include <tests/Test.h>
 #include <string>
 #include <iostream>
 

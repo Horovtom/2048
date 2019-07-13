@@ -3,13 +3,17 @@
 
 #include <gtkmm/drawingarea.h>
 
+#define COLOR_WHITE 1.0, 1.0, 1.0
+#define COLOR_BLACK 0.0, 0.0, 0.0
+#define EMPTY_TILE_COLOR 0.0, 0.0, 0.0, 0.1
+
 class GameArea : public Gtk::DrawingArea {
 public:
     GameArea();
 
     virtual ~GameArea();
 
-    void setText(std::string text);
+    void setData(std::vector<std::vector<int>> data, int width, int height, int score);
 
 protected:
     //Override default signal handler:
@@ -20,7 +24,38 @@ private:
 
     void draw_text(const Cairo::RefPtr<Cairo::Context> &cr, int x, int y, const std::string &text);
 
-    std::string text;
+    const int SIDE_OFFSET = 5;
+    const int TEXT_HEIGHT = 15;
+    const int CELL_PADDING = 3;
+    const float TILE_ALPHA = 0.7;
+    int dataWidth = 0;
+    int dataHeight = 0;
+    std::vector<std::vector<int>> data;
+    int score = 0;
+
+    void drawGrid(const Cairo::RefPtr<Cairo::Context> &cr, const int i, int i1);
+
+    void drawNumber(const Cairo::RefPtr<Cairo::Context> &cr, int number, int x, int y, int maxSize);
+
+    const struct {
+        double r, g, b;
+    } colorList[13] = {
+            {0.0, 0.0, 0.0}, //2
+            {0.5, 0.0, 0.0}, //4
+            {0.0, 0.5, 0.0}, //8
+            {0.0, 0.0, 0.5}, //16
+            {0.5, 0.5, 0.0}, //32
+            {0.0, 0.5, 0.5}, //64
+            {0.5, 0.0, 0.5}, //128
+            {0.2, 0.5, 0.7}, //256
+            {0.7, 0.2, 0.5}, //512
+            {0.5, 0.7, 0.2}, //1024
+            {0.7, 0.2, 0.7}, //2048
+            {0.2, 0.7, 0.2}, //4096
+            {0.7, 0.7, 0.2}, //8192
+    };
+
+    void setColorForNumber(const Cairo::RefPtr<Cairo::Context> &cr, int number);
 };
 
 #endif //__GAME_AREA_H

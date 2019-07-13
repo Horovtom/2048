@@ -7,7 +7,9 @@
 
 
 #include <gtkmm.h>
-#include "GameArea.h"
+#include <graphics/GameArea.h>
+
+class Controller;
 
 class GameWindow : public Gtk::Window {
 public:
@@ -16,10 +18,17 @@ public:
 
     virtual ~GameWindow();
 
+    void registerController(Controller *controller);
+
+    void setData(std::vector<std::vector<int>> data, int width, int height, int score);
+
+    void showPrompt(std::string promptText);
+
 private:
     //Override default signal handler:
     bool on_key_press_event(GdkEventKey *event) override;
 
+    Controller *controller = nullptr;
     GameArea area;
 };
 

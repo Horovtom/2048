@@ -3,7 +3,7 @@
 //
 
 #include <tuple>
-#include "Test.h"
+#include <tests/Test.h>
 
 const std::string Test::tabs = "    ";
 

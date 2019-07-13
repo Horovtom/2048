@@ -7,20 +7,23 @@
 #include "graphics/GameWindow.h"
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
+#include "game/Controller.h"
 
 
-int runGraphics(int argc, char *argv[]) {
+int runWithGraphics(int argc, char **argv) {
+    Game game;
+
     auto app = Gtk::Application::create(argc, argv, "com.github.horovtom.bot-2048");
-
     GameWindow window;
 
-    window.set_default_size(640, 640);
+    window.set_default_size(640, 660);
     window.set_title("Game: 2048");
+    Controller controller(&game, &window);
 
     return app->run(window);
 }
 
 int main(int argc, char *argv[]) {
 
-    return runGraphics(argc, argv);
+    return runWithGraphics(argc, argv);
 }

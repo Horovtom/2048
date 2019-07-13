@@ -43,7 +43,7 @@ target_include_directories(2048
 # -------------- TESTS ------------------
 set(TEST_SOURCES
         src/tests/Test.cpp
-        src/tests/Test.h)
+        )
 
 add_executable(test src/tests/runTests.cpp ${GAME_SOURCES} ${TEST_SOURCES})
 target_include_directories(test

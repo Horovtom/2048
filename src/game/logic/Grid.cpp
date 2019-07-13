@@ -201,3 +201,18 @@ int Grid::getScore() {
     }
     return sum;
 }
+
+std::vector<std::vector<int>> Grid::getGrid2D() {
+    std::vector<std::vector<int>> res;
+    res.reserve(w);
+    for (int x = 0; x < w; ++x) {
+        std::vector<int> column;
+        column.reserve(h);
+        for (int y = 0; y < h; ++y) {
+            column.emplace_back(grid.at(coordToIndex({x, y})));
+        }
+        res.emplace_back(column);
+    }
+
+    return res;
+}

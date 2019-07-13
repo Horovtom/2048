@@ -5,6 +5,7 @@
 #ifndef __GRID_H
 #define __GRID_H
 #include <vector>
+#include <string>
 #include "Direction.h"
 
 class Grid {
@@ -19,6 +20,8 @@ public:
     Grid(int width, int height);
     std::vector<int> getGrid();
 
+    bool canMakeTurn();
+
     /**
      * Makes turn modifying the current grid
      * @param direction to which we swiped
@@ -27,6 +30,8 @@ public:
     bool makeTurn(Direction direction);
 
     void setGrid(std::vector<int> g);
+
+    std::string toString();
 private:
     std::vector<int> grid;
     int w;
@@ -35,9 +40,10 @@ private:
     int coordToIndex(Coord coord);
     Coord indexToCoord(int index);
     void addRandomTile();
-    int occupiedTiles();
+
+    int occupiedTilesCount();
     std::vector<int> getFreePlaces();
-    bool canMakeTurn();
+
 };
 
 

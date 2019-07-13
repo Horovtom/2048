@@ -5,6 +5,9 @@
 #include "Grid.h"
 #include <iostream>
 #include <random>
+#include <sstream>
+#include <iomanip>
+#include <cmath>
 
 Grid::Grid(int width, int height): w(width), h(height) {
     grid.reserve(w * h);
@@ -29,7 +32,7 @@ void Grid::setGrid(std::vector<int> g) {
 }
 
 std::vector<int> Grid::getGrid() {
-    return std::vector<int>(grid);
+    return grid;
 }
 
 bool Grid::makeTurn(Direction direction) {
@@ -39,7 +42,7 @@ bool Grid::makeTurn(Direction direction) {
 
     switch(direction) {
         case RIGHT:
-            currentIndex = 15;
+            currentIndex = w * h - 1;
             increment = nextLine = -1;
             stop = w; stop2 = h;
             break;
@@ -51,7 +54,7 @@ bool Grid::makeTurn(Direction direction) {
             break;
 
         case DOWN:
-            currentIndex = 15;
+            currentIndex = w * h - 1;
             increment = -w;
             nextLine = (w * (h - 1)) - 1;
             stop = h; stop2= w;
@@ -73,11 +76,12 @@ bool Grid::makeTurn(Direction direction) {
 
     for (int r = 0; r < stop2; ++r) {
         int lastIndex = currentIndex;
-        int lastValue = grid.at(lastIndex);
+        int lastValue;
 
         for (int i = stop - 2; i >= 0; --i) {
             currentIndex += increment;
             int currentValue = grid.at(currentIndex);
+            lastValue = grid.at(lastIndex);
 
             if (currentValue == EMPTY)
                 continue;
@@ -88,6 +92,7 @@ bool Grid::makeTurn(Direction direction) {
                 grid.at(lastIndex) = currentValue;
                 grid.at(currentIndex) = EMPTY;
                 changedSomething = true;
+                continue;
             } else if (lastValue == currentValue) {
                 // Merge
                 grid.at(lastIndex) = 2*currentValue;
@@ -98,12 +103,12 @@ bool Grid::makeTurn(Direction direction) {
                 lastIndex += increment;
                 if (lastIndex != currentIndex) {
                     grid.at(lastIndex) = currentValue;
-                    grid.at(currentValue) = EMPTY;
+                    grid.at(currentIndex) = EMPTY;
                     changedSomething = true;
                 }
+                continue;
             }
             lastIndex += increment;
-            lastValue = grid.at(lastIndex);
         }
         currentIndex += nextLine;
     }
@@ -114,12 +119,31 @@ bool Grid::makeTurn(Direction direction) {
     return changedSomething;
 }
 
+std::string Grid::toString() {
+    int max = 0;
+    for (int i : grid) {
+        if (i > max) max = i;
+    }
+
+    int width = static_cast<int>(log10(max)) + 2;
+
+    std::stringstream res;
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            std::string element = std::to_string(grid.at(coordToIndex({j, i})));
+            res << std::setw(width) << element;
+        }
+        res << std::endl;
+    }
+    return res.str();
+}
+
 bool Grid::canMakeTurn() {
     for (int i = 0; i < h - 1; i++) {
         for (int j = 0; j < w - 1 ; j++) {
-            int index = grid.at(coordToIndex({i, j}));
-            int ahead = grid.at(coordToIndex({i+1, j}));
-            int below = grid.at(coordToIndex({i, j+1}));
+            int index = grid.at(coordToIndex({j, i}));
+            int ahead = grid.at(coordToIndex({j + 1, i}));
+            int below = grid.at(coordToIndex({j, i + 1}));
             if (index == 0 || ahead == 0 || below == 0) return true;
             if (index == ahead || index == below) return true;
         }
@@ -129,8 +153,8 @@ bool Grid::canMakeTurn() {
 
 void Grid::addRandomTile() {
     std::vector<int> freePlaces = getFreePlaces();
-    if (freePlaces.size() == 0) {
-        std::cerr<< "There was no free place to put the tile to!" << std::endl;
+    if (freePlaces.empty()) {
+        std::cerr << "There was no free place to put the tile to! The game should be finished now!" << std::endl;
         return;
     }
 
@@ -145,7 +169,7 @@ void Grid::addRandomTile() {
     std::cout << "Added number: " <<which << " to place: " << tile << std::endl;
 }
 
-int Grid::occupiedTiles() {
+int Grid::occupiedTilesCount() {
     int curr = 0;
     for (int i = 0; i < w * h; ++i) {
         if (grid.at(i) != 0) curr++;

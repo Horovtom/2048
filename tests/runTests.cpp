@@ -16,63 +16,125 @@
  */
 bool checkAfterMove(Test &test, std::vector<int> got, std::vector<int> expected, std::string nameOfCheck) {
     bool chain = true;
-    test.assertTrue(got.size() == expected.size(), nameOfCheck.append(" - The grid size changed after move!"), &chain);
+    test.assertTrue(got.size() == expected.size(),
+                    std::string(nameOfCheck).append(" - The grid size changed after move!"), &chain);
 
     bool didChange = false;
     for (int i = 0; i < expected.size(); ++i) {
         if (expected.at(i) == 0 && got.at(i) != 0) {
-            test.assertTrue(!didChange, nameOfCheck.append(" - There were multiple added tiles in the resulting grid"),
+            test.assertTrue(!didChange,
+                            std::string(nameOfCheck).append(" - There were multiple added tiles in the resulting grid"),
                             &chain);
             didChange = true;
             test.assertTrue(got.at(i) == 2 || got.at(i) == 4,
-                            nameOfCheck.append(" - Tile added had invalid value: ").append(std::to_string(got.at(i))),
+                            std::string(nameOfCheck).append(" - Tile added had invalid value: ").append(
+                                    std::to_string(got.at(i))),
                             &chain);
         } else
-            test.assertTrue(expected.at(i) == got.at(i), nameOfCheck.append(" - Result of the move was not correct!"),
+            test.assertTrue(expected.at(i) == got.at(i),
+                            std::string(nameOfCheck).append(" - Result of the move was not correct!"),
                             &chain);
     }
 
-    test.assertTrue(didChange, nameOfCheck.append(" - There was no tile added after the turn was made!"), &chain);
+    test.assertTrue(didChange, std::string(nameOfCheck).append(" - There was no tile added after the turn was made!"),
+                    &chain);
+    return chain;
+}
+
+bool checkDirectionsMoves(
+        Test &test,
+        std::vector<int> *originalGrid, int width, int height,
+        std::vector<int> *leftGrid,
+        std::vector<int> *rightGrid,
+        std::vector<int> *upGrid,
+        std::vector<int> *downGrid) {
+    bool chain = true;
+    if (originalGrid == nullptr)
+        return chain;
+
+    std::cout << "--Testing LEFT--" << std::endl;
+    Grid g(*originalGrid, width, height);
+    if (leftGrid != nullptr) {
+        test.assertTrue(g.makeTurn(LEFT), "The LEFT turn should be possible", &chain);
+        test.assertTrue(checkAfterMove(test, g.getGrid(), *leftGrid, "LEFT move"), "Result of LEFT move was invalid",
+                        &chain);
+        g.setGrid(*originalGrid);
+    } else {
+        test.assertTrue(!g.makeTurn(LEFT), "The LEFT turn should NOT be possible", &chain);
+    }
+
+    std::cout << "--Testing RIGHT--" << std::endl;
+    if (rightGrid != nullptr) {
+        test.assertTrue(g.makeTurn(RIGHT), "The RIGHT turn should be possible", &chain);
+        test.assertTrue(checkAfterMove(test, g.getGrid(), *rightGrid, "RIGHT move"), "Result of RIGHT move was invalid",
+                        &chain);
+        g.setGrid(*originalGrid);
+    } else {
+        test.assertTrue(!g.makeTurn(RIGHT), "The RIGHT turn should NOT be possible", &chain);
+    }
+
+    std::cout << "--Testing UP--" << std::endl;
+    if (upGrid != nullptr) {
+        test.assertTrue(g.makeTurn(UP), "The UP turn should be possible", &chain);
+        test.assertTrue(checkAfterMove(test, g.getGrid(), *upGrid, "UP move"), "Result of UP move was invalid",
+                        &chain);
+        g.setGrid(*originalGrid);
+    } else {
+        test.assertTrue(!g.makeTurn(UP), "The UP turn should NOT be possible", &chain);
+    }
+
+    std::cout << "--Testing DOWN--" << std::endl;
+    if (downGrid != nullptr) {
+        test.assertTrue(g.makeTurn(DOWN), "The DOWN turn should be possible", &chain);
+        test.assertTrue(checkAfterMove(test, g.getGrid(), *downGrid, "DOWN move"), "Result of DOWN move was invalid",
+                        &chain);
+        g.setGrid(*originalGrid);
+    } else {
+        test.assertTrue(!g.makeTurn(DOWN), "The DOWN turn should NOT be possible", &chain);
+    }
+
     return chain;
 }
 
 bool testMove1(Test &test) {
-    bool chain = true;
-    //  0   0   2   0
-    //  8   0   8   0
-    //  2   4   4   0
-    //  4   32  2   0
     std::vector<int> grid({0, 0, 2, 0, 8, 0, 8, 0, 2, 4, 4, 0, 4, 32, 2, 0});
+    std::vector<int> left({2, 0, 0, 0, 16, 0, 0, 0, 2, 8, 0, 0, 4, 32, 2, 0});
+    std::vector<int> right({0, 0, 0, 2, 0, 0, 0, 16, 0, 0, 2, 8, 0, 4, 32, 2});
+    std::vector<int> up({8, 4, 2, 0, 2, 32, 8, 0, 4, 0, 4, 0, 0, 0, 2, 0});
+    return checkDirectionsMoves(test, &grid, 4, 4, &left, &right, &up, nullptr);
+}
 
-    Grid g(grid, 4, 4);
-    test.assertTrue(g.makeTurn(LEFT),
-                    "The LEFT turn should be possible.", &chain);
-    test.assertTrue(
-            checkAfterMove(test, g.getGrid(), std::vector<int>({2, 0, 0, 0, 16, 0, 0, 0, 2, 8, 0, 0, 4, 32, 2, 0}),
-                           "LEFT move"),
-            "The result of the LEFT move was not correct!", &chain);
-    g.setGrid(grid);
+bool testMove2(Test &test) {
+    std::vector<int> grid({2, 2, 4, 4, 128, 4, 2, 2, 16, 16, 8, 8, 8, 8, 64, 16, 8, 16, 32, 256});
+    std::vector<int> left({4, 8, 128, 0, 0, 4, 4, 32, 0, 0, 16, 16, 64, 0, 0, 16, 8, 16, 32, 256});
+    std::vector<int> right({0, 0, 4, 8, 128, 0, 0, 4, 4, 32, 0, 0, 16, 16, 64, 16, 8, 16, 32, 256});
+    std::vector<int> up({2, 4, 4, 4, 128, 4, 16, 2, 16, 16, 8, 0, 8, 8, 64, 16, 0, 16, 32, 256});
+    std::vector<int> down({2, 0, 4, 4, 128, 4, 0, 2, 16, 16, 8, 4, 8, 8, 64, 16, 16, 16, 32, 256});
+    return checkDirectionsMoves(test, &grid, 5, 4, &left, &right, &up, &down);
+}
 
-    test.assertTrue(!g.makeTurn(RIGHT),
-                    "The RIGHT turn should be possible", &chain);
-    test.assertTrue(
-            checkAfterMove(test, g.getGrid(), std::vector<int>({0, 0, 0, 2, 0, 0, 0, 16, 0, 0, 2, 8, 0, 4, 32, 2}),
-                           "RIGHT move"),
-            "The result of the RIGHT move was not correct!", &chain);
-    g.setGrid(grid);
+bool testMovePossible(Test &test) {
+    bool chain = true;
+    std::vector<int> grid({4, 8, 4, 8, 4, 8});
+    chain = checkDirectionsMoves(test, &grid, 3, 2, nullptr, nullptr, nullptr, nullptr) && chain;
+    std::vector<int> grid2({4, 8, 4, 4, 16, 32});
+    std::vector<int> upGrid({8, 8, 4, 0, 16, 32});
+    std::vector<int> downGrid({0, 8, 4, 8, 16, 32});
+    chain = checkDirectionsMoves(test, &grid2, 3, 2, nullptr, nullptr, &upGrid, &downGrid) && chain;
 
-    test.assertTrue(g.makeTurn(UP),
-                    "The UP turn should be possible", &chain);
-    test.assertTrue(
-            checkAfterMove(test, g.getGrid(), std::vector<int>({8, 4, 2, 0, 2, 32, 8, 0, 4, 0, 4, 0, 0, 0, 2, 0}),
-                           "UP move"),
-            "The result of the UP move was not correct!", &chain);
-    g.setGrid(grid);
+    return chain;
+}
 
-    test.assertTrue(!g.makeTurn(DOWN),
-                    "The DOWN turn should NOT be possible", &chain);
-    test.assertTrue(g.getGrid() == grid,
-                    "The grid should not change after an impossible move!", &chain);
+bool testCanMakeMove(Test &test) {
+    bool chain = true;
+    std::vector<int> grid({4, 8, 4, 8, 4, 8});
+    std::vector<int> grid2({4, 8, 4, 4, 16, 32});
+
+    Grid g(grid, 3, 2);
+    test.assertTrue(!g.canMakeTurn(), "This grid should not be able to make a move", &chain);
+    g.setGrid(grid2);
+    test.assertTrue(g.canMakeTurn(), "This grid should be able to make a move", &chain);
+
     return chain;
 }
 
@@ -100,6 +162,9 @@ bool testGridReference(Test &test) {
 int main(int argc, char *argv[]) {
     Test test;
     test.registerTest(testGridReference, "Test of grid vector passing");
-    test.registerTest(testMove1, "Test Move 1");
+    test.registerTest(testMove1, "Test Move symmetrical");
+    test.registerTest(testMove2, "Test Move asymmetrical");
+    test.registerTest(testMovePossible, "Test Move Possible");
+    test.registerTest(testCanMakeMove, "Test of canMakeMove function");
     test.run();
 }

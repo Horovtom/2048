@@ -158,6 +158,10 @@ bool Grid::canMakeTurn() {
         if (grid.at(coordToIndex({i, h - 1}) == grid.at(coordToIndex({i + 1, h - 1}))))
             return true;
     }
+    for (int i = 0; i < h - 1; ++i) {
+        if (grid.at(coordToIndex({w - 1, i})) == grid.at(coordToIndex({w - 1, i + 1})))
+            return true;
+    }
     return false;
 }
 

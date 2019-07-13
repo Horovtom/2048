@@ -3,12 +3,35 @@ project(2048)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCES
-        src/Game.cpp
-        src/Grid.cpp
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(GTKMM gtkmm-3.0) # look into FindPkgConfig.cmake,
+# it contains documentation
+# Now the variables GTKMM_INCLUDE_DIRS, GTKMM_LIBRARY_DIRS and GTKMM_LIBRARIES
+# contain what you expect
+
+link_directories(
+        ${GTKMM_LIBRARY_DIRS})
+
+include_directories(
+        ${GTKMM_INCLUDE_DIRS})
+
+
+set(GAME_SOURCES
+        src/game/logic/Game.cpp
+        src/game/logic/Grid.cpp
+        src/game/Controller.cpp)
+
+set(GRAPHICS_SOURCES
+        src/graphics/GameArea.cpp
+        src/graphics/GameWindow.cpp
         )
 
-add_executable(2048 src/main.cpp ${SOURCES})
+
+add_executable(2048 src/main.cpp ${GAME_SOURCES} ${GRAPHICS_SOURCES})
+
+target_link_libraries(2048
+        ${GTKMM_LIBRARIES})
 
 # Set the directories that should be included in the build command for this target
 # when running g++ these will be included as -I/directory/path
@@ -17,11 +40,12 @@ target_include_directories(2048
         ${PROJECT_SOURCE_DIR}/include
         )
 
-set(TEST_LIB
-        tests/Test.cpp
-        tests/Test.h)
+# -------------- TESTS ------------------
+set(TEST_SOURCES
+        src/tests/Test.cpp
+        src/tests/Test.h)
 
-add_executable(test tests/runTests.cpp ${SOURCES} ${TEST_LIB})
+add_executable(test src/tests/runTests.cpp ${GAME_SOURCES} ${TEST_SOURCES})
 target_include_directories(test
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include)

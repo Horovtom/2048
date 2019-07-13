@@ -2,12 +2,12 @@
 // Created by lactosis on 12.7.19.
 //
 
-#include "Grid.h"
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include "game/logic/Grid.h"
 
 Grid::Grid(int width, int height): w(width), h(height) {
     grid.reserve(w * h);
@@ -192,4 +192,12 @@ int Grid::coordToIndex(Grid::Coord coord) {
 
 Grid::Coord Grid::indexToCoord(int index) {
     return {index % w, index / w};
+}
+
+int Grid::getScore() {
+    int sum = 0;
+    for (int i = 0; i < w * h; ++i) {
+        sum += grid.at(i);
+    }
+    return sum;
 }

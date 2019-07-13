@@ -32,11 +32,12 @@ public:
     void setGrid(std::vector<int> g);
 
     std::string toString();
+
+    int getScore();
 private:
     std::vector<int> grid;
     int w;
     int h;
-    int score = 0;
     int coordToIndex(Coord coord);
     Coord indexToCoord(int index);
     void addRandomTile();

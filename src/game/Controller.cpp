@@ -8,6 +8,8 @@
 Controller::Controller(Game *g, GameWindow *w) {
     window = w;
     game = g;
+    player = g->getPlayer();
+    restartPrompt = false;
     w->registerController(this);
 }
 
@@ -20,17 +22,20 @@ void Controller::update() {
 }
 
 void Controller::onUserAction(Direction direction) {
-    game->makeTurn(direction);
     restartPrompt = false;
+
+    if (!player->isInteractive()) {
+        std::cout << "Player is not interactive, throwing the userAction event away" << std::endl;
+        return;
+    }
+
+    player->userPromptedTurn(direction);
+    game->nextTurn();
     update();
-    if (game->gameOver()) window->showPrompt("Game OVER! Press space for restart");
+    if (game->gameOver()) window->showPrompt("Game OVER! Press R for restart");
 }
 
-void Controller::rollback() {
-    //TODO: IMPLEMENT
-}
-
-void Controller::spacePressed() {
+void Controller::restartPressed() {
     if (game->gameOver() || restartPrompt) {
         std::cout << "Resetting the game " << std::endl;
         game->resetGame();
@@ -40,4 +45,14 @@ void Controller::spacePressed() {
         window->showPrompt("Do you really want to restart the game?");
         restartPrompt = true;
     }
+}
+
+void Controller::spacePressed() {
+    restartPrompt = false;
+    if (player->isInteractive()) {
+        std::cout << "Player is interactive, throwing the nextTurn event away" << std::endl;
+        return;
+    }
+    game->nextTurn();
+    update();
 }

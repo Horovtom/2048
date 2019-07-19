@@ -29,7 +29,10 @@ set(GRAPHICS_SOURCES
         )
 
 set(AI_SOURCES
-        src/ai/GameState.cpp)
+        src/ai/HumanPlayer.cpp
+        src/ai/minmax/GameState.cpp
+        src/ai/minmax/MinmaxPlayer.cpp
+        )
 
 
 add_executable(2048 src/main.cpp ${GAME_SOURCES} ${GRAPHICS_SOURCES} ${AI_SOURCES})

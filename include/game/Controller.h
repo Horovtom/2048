@@ -18,7 +18,7 @@ public:
 
     void update();
 
-    void rollback();
+    void restartPressed();
 
     void spacePressed();
 
@@ -26,6 +26,7 @@ private:
     Game *game;
     GameWindow *window;
     bool restartPrompt;
+    Player *player;
 };
 
 

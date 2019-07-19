@@ -42,7 +42,7 @@ public:
     int occupiedTilesCount();
 
 protected:
-    const double PROB_4 = 0.25;
+    const double PROB_4 = 0.10;
 
     /**
      * Will shift tiles in specified direction and merge those that are to be merged.

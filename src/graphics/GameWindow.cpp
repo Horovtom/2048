@@ -38,8 +38,10 @@ bool GameWindow::on_key_press_event(GdkEventKey *key_event) {
         //close the window, when the 'esc' key is pressed
         hide();
     } else if (key_event->keyval == GDK_KEY_BackSpace) {
-        // TODO: Take back a move!
-        controller->rollback();
+//         TODO: Take back a move!
+//        controller->rollback();
+    } else if (key_event->keyval == GDK_KEY_r || key_event->keyval == GDK_KEY_R) {
+        controller->restartPressed();
     } else if (key_event->keyval == GDK_KEY_space) {
         controller->spacePressed();
     } else {

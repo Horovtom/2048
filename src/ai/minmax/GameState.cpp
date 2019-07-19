@@ -4,7 +4,7 @@
 // Created by lactosis on 19.7.19.
 //
 
-#include "ai/minmax/GameState.h"
+#include <ai/minmax/GameState.h>
 
 std::vector<GameState> GameState::getChildrenStates(Direction direction) {
     std::vector<GameState> result;
@@ -38,8 +38,9 @@ std::vector<GameState> GameState::getChildrenStates(Direction direction) {
     return result;
 }
 
-GameState::GameState(std::vector<int> grid, int width, int height, double probability) : Grid(std::move(grid), width,
-                                                                                              height),
-                                                                                         probability(probability) {}
+GameState::GameState(std::vector<int> grid, int width, int height, double probability) :
+        Grid(std::move(grid), width, height), probability(probability) {}
+
+
 
 

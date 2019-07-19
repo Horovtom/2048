@@ -6,7 +6,7 @@
 #include "game/logic/Game.h"
 #include "game/logic/Direction.h"
 
-Game::Game(int width, int height) : w(width), h(height), grid(width, height) {
+Game::Game(int width, int height, Player *player) : w(width), h(height), grid(width, height), player(player) {
 
 }
 
@@ -36,4 +36,12 @@ void Game::resetGame() {
 
 bool Game::gameOver() {
     return !grid.canMakeTurn();
+}
+
+Player *Game::getPlayer() {
+    return player;
+}
+
+void Game::nextTurn() {
+    makeTurn(player->makeMove(grid));
 }

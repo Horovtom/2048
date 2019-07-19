@@ -39,17 +39,30 @@ public:
 
     void resetGrid();
 
-private:
-    std::vector<int> grid;
+    int occupiedTilesCount();
+
+protected:
+    const double PROB_4 = 0.25;
+
+    /**
+     * Will shift tiles in specified direction and merge those that are to be merged.
+     * @return Whether any tile has been affected by the shift.
+     */
+    bool shift(Direction direction);
+
+    std::vector<int> getFreePlaces();
+
+    void setAt(int index, int value);
+
     int w;
     int h;
+
+private:
+    std::vector<int> grid;
+
     int coordToIndex(Coord coord);
     Coord indexToCoord(int index);
     void addRandomTile();
-
-    int occupiedTilesCount();
-    std::vector<int> getFreePlaces();
-
 };
 
 

@@ -28,8 +28,11 @@ set(GRAPHICS_SOURCES
         src/graphics/GameWindow.cpp
         )
 
+set(AI_SOURCES
+        src/ai/GameState.cpp)
 
-add_executable(2048 src/main.cpp ${GAME_SOURCES} ${GRAPHICS_SOURCES})
+
+add_executable(2048 src/main.cpp ${GAME_SOURCES} ${GRAPHICS_SOURCES} ${AI_SOURCES})
 
 target_link_libraries(2048
         ${GTKMM_LIBRARIES})
@@ -46,7 +49,7 @@ set(TEST_SOURCES
         src/tests/Test.cpp
         )
 
-add_executable(test src/tests/runTests.cpp ${GAME_SOURCES} ${TEST_SOURCES})
+add_executable(test src/tests/runTests.cpp ${GAME_SOURCES} ${AI_SOURCES} ${TEST_SOURCES})
 target_include_directories(test
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include)

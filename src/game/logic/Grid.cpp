@@ -35,9 +35,7 @@ std::vector<int> Grid::getGrid() {
     return grid;
 }
 
-bool Grid::makeTurn(Direction direction) {
-    std::cout << "Making turn to " << direction << std::endl;
-
+bool Grid::shift(Direction direction) {
     int currentIndex, increment, nextLine, stop, stop2;
 
     switch (direction) {
@@ -116,6 +114,13 @@ bool Grid::makeTurn(Direction direction) {
         }
         currentIndex += nextLine;
     }
+    return changedSomething;
+}
+
+bool Grid::makeTurn(Direction direction) {
+    std::cout << "Making turn to " << direction << std::endl;
+
+    bool changedSomething = shift(direction);
 
     if (changedSomething)
         addRandomTile();
@@ -155,7 +160,7 @@ bool Grid::canMakeTurn() {
     }
 
     for (int i = 0; i < w - 1; ++i) {
-        if (grid.at(coordToIndex({i, h - 1}) == grid.at(coordToIndex({i + 1, h - 1}))))
+        if (grid.at(coordToIndex({i, h - 1})) == grid.at(coordToIndex({i + 1, h - 1})))
             return true;
     }
     for (int i = 0; i < h - 1; ++i) {
@@ -163,6 +168,10 @@ bool Grid::canMakeTurn() {
             return true;
     }
     return false;
+}
+
+void Grid::setAt(int index, int value) {
+    grid.at(index) = value;
 }
 
 void Grid::addRandomTile() {
@@ -178,7 +187,7 @@ void Grid::addRandomTile() {
 
     int tile = freePlaces.at(uni(rng));
     std::uniform_int_distribution<int> uni2(1, 4);
-    int which = (uni2(rng) / 4 + 1) * 2;
+    int which = (static_cast<int>(uni2(rng) * PROB_4) + 1) * 2;
     grid.at(tile) = which;
     std::cout << "Added number: " << which << " to place: " << tile << std::endl;
 }

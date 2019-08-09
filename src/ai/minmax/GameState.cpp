@@ -14,7 +14,10 @@ std::vector<GameState> GameState::getChildrenStates(Direction direction) {
     if (!canMakeTurn())
         return result;
 
-    shift(direction);
+    if (!shift(direction)) {
+        return result;
+    }
+
     std::vector<int> shiftedGrid = getGrid();
     std::vector<int> freePlaces = getFreePlaces();
 
@@ -40,6 +43,10 @@ std::vector<GameState> GameState::getChildrenStates(Direction direction) {
 
 GameState::GameState(std::vector<int> grid, int width, int height, double probability) :
         Grid(std::move(grid), width, height), probability(probability) {}
+
+double GameState::getProbScore() {
+    return getScore() * probability;
+}
 
 
 

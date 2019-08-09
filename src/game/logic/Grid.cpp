@@ -247,3 +247,12 @@ void Grid::resetGrid() {
     addRandomTile();
     addRandomTile();
 }
+
+bool Grid::canMakeTurn(Direction direction) {
+    // TODO: This can be optimised
+
+    std::vector<int> origGrid = std::vector<int>(grid);
+    bool canShift = shift(direction);
+    grid = origGrid;
+    return canShift;
+}

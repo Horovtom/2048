@@ -22,6 +22,8 @@ public:
 
     bool canMakeTurn();
 
+    bool canMakeTurn(Direction direction);
+
     /**
      * Makes turn modifying the current grid
      * @param direction to which we swiped
@@ -38,6 +40,10 @@ public:
     std::vector<std::vector<int>> getGrid2D();
 
     void resetGrid();
+
+    int getWidth() { return w; }
+
+    int getHeight() { return h; }
 
     int occupiedTilesCount();
 

@@ -4,7 +4,7 @@
 
 #include <tests/Test.h>
 #include <ai/minmax/GameState.h>
-#include <ai/minmax/MinmaxPlayer.h>
+#include <ai/minmax/FullSearchPlayer.h>
 
 bool containsState(const std::vector<GameState> &gameStates, const std::vector<int> &state, double probability) {
     for (GameState g : gameStates) {
@@ -56,26 +56,6 @@ bool testStateGeneration1(Test &test) {
     test.assertTrue(containsState(gameStates, {8, 4, 4, 2, 2, 4}, 0.10), "The result should contain this state!",
                     &chain);
     test.assertTrue(gameStates.size() == 2, "The result should contain only two states!", &chain);
-
-    return chain;
-}
-
-bool testDecisionMaking(Test &test) {
-    bool chain = true;
-    MinmaxPlayer minmaxPlayer(2);
-
-    Grid g(std::vector<int>({0, 2, 0, 2}), 2, 2);
-
-    Direction dir = minmaxPlayer.makeMove(g);
-    test.assertTrue(dir == UP || dir == DOWN, "The resulting move should be UP/DOWN!", &chain);
-
-    g.setGrid(std::vector<int>({2, 2, 0, 0}));
-    dir = minmaxPlayer.makeMove(g);
-    test.assertTrue(dir == LEFT || dir == RIGHT, "The resulting move should be LEFT/RIGHT!", &chain);
-
-    g.setGrid(std::vector<int>({2, 2, 4, 0}));
-    dir = minmaxPlayer.makeMove(g);
-    test.assertTrue(dir == LEFT || dir == RIGHT, "The resulting move should be LEFT/RIGHT", &chain);
 
     return chain;
 }

@@ -217,12 +217,19 @@ Grid::Coord Grid::indexToCoord(int index) {
     return {index % w, index / w};
 }
 
-int Grid::getScore() {
-    int sum = 0;
+double Grid::getScore() const {
+    double sum = 0;
+    int max = 0;
+    int maxNum = 0;
     for (int i = 0; i < w * h; ++i) {
-        sum += grid.at(i);
+        if (grid.at(i) == 0) {
+            maxNum++;
+        } else {
+            sum += grid.at(i) * log(grid.at(i));
+        }
+        if (grid.at(i) > max) max = grid.at(i);
     }
-    return sum;
+    return sum + (max * max * maxNum);
 }
 
 std::vector<std::vector<int>> Grid::getGrid2D() {

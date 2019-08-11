@@ -2,12 +2,12 @@
 // Created by lactosis on 19.7.19.
 //
 
-#include <ai/minmax/MinmaxPlayer.h>
+#include <ai/minmax/FullSearchPlayer.h>
 #include <ai/minmax/GameState.h>
 #include <iostream>
 
 
-Direction MinmaxPlayer::makeMove(Grid grid) {
+Direction FullSearchPlayer::makeMove(Grid grid) {
     GameState g(grid.getGrid(), grid.getWidth(), grid.getHeight(), 1);
 
     double bestValue = 0;
@@ -40,7 +40,7 @@ Direction MinmaxPlayer::makeMove(Grid grid) {
     return bestDirection;
 }
 
-double MinmaxPlayer::considerDirection(GameState state, Direction direction, int depthLeft) {
+double FullSearchPlayer::considerDirection(GameState state, Direction direction, int depthLeft) {
     if (!state.canMakeTurn(direction)) return 0;
     if (depthLeft == 0)
         return state.getProbScore();
@@ -51,16 +51,20 @@ double MinmaxPlayer::considerDirection(GameState state, Direction direction, int
     }
     double sum = 0;
     for (const GameState &gs : childrenStates) {
-        sum += considerDirection(gs, UP, depthLeft - 1);
-        sum += considerDirection(gs, LEFT, depthLeft - 1);
-        sum += considerDirection(gs, DOWN, depthLeft - 1);
-        sum += considerDirection(gs, RIGHT, depthLeft - 1);
+        if (depthLeft == 1) {
+            sum += gs.getProbScore();
+        } else {
+            sum += considerDirection(gs, UP, depthLeft - 1);
+            sum += considerDirection(gs, LEFT, depthLeft - 1);
+            sum += considerDirection(gs, DOWN, depthLeft - 1);
+            sum += considerDirection(gs, RIGHT, depthLeft - 1);
+        }
     }
     return sum;
 }
 
-bool MinmaxPlayer::isInteractive() {
+bool FullSearchPlayer::isInteractive() {
     return false;
 }
 
-void MinmaxPlayer::userPromptedTurn(Direction direction) {}
+void FullSearchPlayer::userPromptedTurn(Direction direction) {}

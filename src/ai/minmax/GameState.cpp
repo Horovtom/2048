@@ -44,7 +44,7 @@ std::vector<GameState> GameState::getChildrenStates(Direction direction) {
 GameState::GameState(std::vector<int> grid, int width, int height, double probability) :
         Grid(std::move(grid), width, height), probability(probability) {}
 
-double GameState::getProbScore() {
+double GameState::getProbScore() const {
     return getScore() * probability;
 }
 

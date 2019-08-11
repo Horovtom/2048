@@ -25,7 +25,7 @@ public:
      */
     double probability;
 
-    double getProbScore();
+    double getProbScore() const;
 };
 
 

@@ -31,7 +31,8 @@ set(GRAPHICS_SOURCES
 set(AI_SOURCES
         src/ai/HumanPlayer.cpp
         src/ai/minmax/GameState.cpp
-        src/ai/minmax/MinmaxPlayer.cpp
+        src/ai/minmax/FullSearchPlayer.cpp
+        src/ai/minmax/MinMaxPlayer.cpp
         )
 
 

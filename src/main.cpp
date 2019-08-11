@@ -8,7 +8,8 @@
 #include <gtkmm/application.h>
 #include <gtkmm/window.h>
 #include <ai/Player.h>
-#include <ai/minmax/MinmaxPlayer.h>
+#include <ai/minmax/FullSearchPlayer.h>
+#include <ai/minmax/MinMaxPlayer.h>
 #include "game/Controller.h"
 
 
@@ -26,6 +27,6 @@ int runWithGraphics(int argc, char **argv, Game *game) {
 
 int main(int argc, char *argv[]) {
 
-//    return runWithGraphics(argc, argv, Game(4,4,MinmaxPlayer()));
-    return runWithGraphics(argc, argv, new Game(4, 4, new HumanPlayer()));
+//    return runWithGraphics(argc, argv, Game(4,4,FullSearchPlayer()));
+    return runWithGraphics(argc, argv, new Game(4, 4, new FullSearchPlayer(3)));
 }

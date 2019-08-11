@@ -35,7 +35,7 @@ public:
 
     std::string toString();
 
-    int getScore();
+    double getScore() const;
 
     std::vector<std::vector<int>> getGrid2D();
 

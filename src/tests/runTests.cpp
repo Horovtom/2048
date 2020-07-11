@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
     // Minmax tests
     test.registerTest(testStateGeneration1, "Test of state generation function");
-    test.registerTest(testDecisionMaking, "Test of minmax decision making");
+//    test.registerTest(testDecisionMaking, "Test of minmax decision making");
 
     test.run();
 }
